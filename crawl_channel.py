@@ -10,7 +10,7 @@ def crawl():
         channel = item[0]
         url = item[1] + '/videos?pbj=1'
 
-        channel_id = re.findall(r'channel/(.+)', url)
+        channel_id = re.findall(r'channel/(.+)', url)[0]
         headers = {'referer': item[1]}
         r = requests.get(url, headers=headers)
         print(r.headers)
