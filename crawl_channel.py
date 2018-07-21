@@ -10,12 +10,15 @@ def crawl():
         channel = item[0]
         url = item[1] + '/videos?pbj=1'
 
-        channel_id = re.findall(r'channel/(.+)', url)[0]
+        channel_id = re.findall(r'channel/([^/]+)', url)[0]
         headers = {'referer': item[1]}
+        print(url)
         r = requests.get(url, headers=headers)
         print(r.headers)
         with open('html/channel_{0}.html'.format(channel_id), 'w') as fp:
             fp.write(r.text)
+
+        break
 
 
 if __name__ == '__main__':
