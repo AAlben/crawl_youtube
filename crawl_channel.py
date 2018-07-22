@@ -46,7 +46,7 @@ def check(channel_id):
     file = os.path.join('html', 'channel_{0}.html'.format(channel_id))
     if os.path.exists(file):
         return True
-    return Fals
+    return False
 
 
 def parse_common(content, channel, writer):
