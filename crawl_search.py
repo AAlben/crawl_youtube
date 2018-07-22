@@ -13,6 +13,7 @@ def crawl():
     for item in frame.values:
         channel = item[0]
         url = item[1]
+        url = 'https://www.youtube.com/results?search_query=' + quote(channel)
         headers = {
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
         }
@@ -162,4 +163,4 @@ def extract(channel, _next, writer):
 
 
 if __name__ == '__main__':
-    next_page()
+    crawl()

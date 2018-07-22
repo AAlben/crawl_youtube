@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import re
+from optparse import OptionParser
 
 from you_get.extractors import youtube
 
@@ -19,18 +20,29 @@ def parse():
     frame.to_csv('data/crawled_d.csv', index=None, encoding='utf-8')
 
 
-def download(frame):
-    for index in range(28, 5000):
-        item = frame.iloc[index]
+def download(frame, index=0):
+    start_flag = False
+    for i, item in enumerate(frame.values):
         url = item[2]
+        print(i)
         print(url)
-        _id = re.findall(r'watch[?]v=(.+)', url)[0]
-        youtube.download(
+        if index == i:
+            start_flag = True
+            continue
+        if not start_flag:
+            continue
+        result = youtube.download(
             url,
             output_dir='/data/videos',
             merge=False
         )
 
+
 if __name__ == '__main__':
+    parser = OptionParser()
+    parser.add_option("-i", "--index", dest="index",
+                      help="skip index")
+    (options, args) = parser.parse_args()
+    index = int(options.index)
     frame = pd.read_csv('data/crawled_d.csv')
-    download(frame)
+    download(frame, index)
