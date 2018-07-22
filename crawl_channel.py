@@ -10,9 +10,6 @@ import os
 def crawl():
     frame = pd.read_csv('data/channel.csv')
     for item in frame.values:
-        if check(item[1]):
-            continue
-
         channel = item[0]
         url = item[1] + '/videos'
         headers = {
@@ -20,6 +17,10 @@ def crawl():
         }
         channel_id = re.findall(r'channel/([^/]+)', url)[0]
         print(url)
+
+        if check(channel_id):
+            continue
+
         r = requests.get(url, headers=headers)
         print(r.headers)
         time.sleep(1)
@@ -41,7 +42,7 @@ def parse(page_html, channel):
         parse_common(tabs, channel, writer)
 
 
-def check(video_id):
+def check(channel_id):
     file = os.path.join('html', 'channel_{0}.html'.format(channel_id))
     if os.path.exists(file):
         return True
@@ -87,7 +88,7 @@ def parse_common(content, channel, writer):
                         'tag': None,
                         'channel': channel
                     }
-                    print(d)
+                    # print(d)
                     writer.writerow(d)
 
 
