@@ -4,11 +4,15 @@ import requests
 import time
 import pandas as pd
 import csv
+import os
 
 
 def crawl():
     frame = pd.read_csv('data/channel.csv')
     for item in frame.values:
+        if check(item[1]):
+            continue
+
         channel = item[0]
         url = item[1] + '/videos'
         headers = {
@@ -35,6 +39,13 @@ def parse(page_html, channel):
         videos = json.loads(result)
         tabs = videos['contents']['twoColumnBrowseResultsRenderer']['tabs']
         parse_common(tabs, channel, writer)
+
+
+def check(video_id):
+    file = os.path.join('html', 'channel_{0}.html'.format(channel_id))
+    if os.path.exists(file):
+        return True
+    return Fals
 
 
 def parse_common(content, channel, writer):
