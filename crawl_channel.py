@@ -31,23 +31,60 @@ def parse(page_html, channel):
               'response_url', 'desc', 'tag', 'channel']
     with open('data/crawled.csv', 'a') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fields)
-        # writer.writeheader()
         result = re.findall(r'({"responseContext"[^;]+)', page_html)[0]
         videos = json.loads(result)
-        b = videos['contents']['twoColumnBrowseResultsRenderer']['tabs'][1]
-        c = b['tabRenderer']['content']['sectionListRenderer'][
-            'contents'][0]['itemSectionRenderer']['contents'][0]['gridRenderer']['items']
-        for item in c:
-            d = {
-                'title': item['gridVideoRenderer']['title']['simpleText'],
-                'data_source': 'youtube',
-                'url': 'https://www.youtube.com/watch?v=' + item['gridVideoRenderer']['videoId'],
-                'response_url': 'https://www.youtube.com/watch?v=' + item['gridVideoRenderer']['videoId'],
-                'desc': None,
-                'tag': None,
-                'channel': None
-            }
-            writer.writerow(d)
+        tabs = videos['contents']['twoColumnBrowseResultsRenderer']['tabs']
+        parse_common(tabs, channel, wri)
+
+
+def parse_common(content, channel, writer):
+    for item in content:
+        if not item:
+            print('not item')
+            continue
+        if not item.get('tabRenderer'):
+            continue
+
+        data = item['tabRenderer']
+        if not data.get('content'):
+            continue
+        contents = data['content']['sectionListRenderer']['contents']
+        for a in contents:
+            items = None
+            key = None
+            print('index')
+            if not a:
+                continue
+            print(a.keys())
+            if a.get('itemSectionRenderer'):
+                for b in a['itemSectionRenderer']['contents']:
+                    if b.get('shelfRenderer'):
+                        items = b['shelfRenderer']['content'][
+                            'horizontalMovieListRenderer']['items']
+                        key = 'gridMovieRenderer'
+                    elif b.get('gridRenderer'):
+                        items = b['gridRenderer']['items']
+                        key = 'gridVideoRenderer'
+            elif a.get(''):
+                print('gridRenderer')
+            elif a.get('sectionListRenderer'):
+                print('sectionListRenderer')
+            else:
+                print('else continue')
+
+            if items:
+                for one in items:
+                    d = {
+                        'title': one[key]['title']['simpleText'],
+                        'data_source': 'youtube',
+                        'url': 'https://www.youtube.com/watch?v=' + one[key]['videoId'],
+                        'response_url': 'https://www.youtube.com/watch?v=' + one[key]['videoId'],
+                        'desc': None,
+                        'tag': None,
+                        'channel': channel
+                    }
+                    print(d)
+
 
 if __name__ == '__main__':
     crawl()
