@@ -5,6 +5,7 @@ import time
 import pandas as pd
 import csv
 import os
+from urllib.parse import quote
 
 
 def crawl():
@@ -94,6 +95,7 @@ def parse_search(data, channel, writer):
         key = None
         if not a:
             continue
+        print(a.keys())
         if a.get('itemSectionRenderer'):
             for b in a['itemSectionRenderer']['contents']:
                 if b.get('shelfRenderer'):
@@ -107,9 +109,13 @@ def parse_search(data, channel, writer):
                 elif b.get('videoRenderer'):
                     items.append(b)
                     key = 'videoRenderer'
-
+            _next = a['itemSectionRenderer'][
+                'continuations'][0]['nextContinuationData']
+            extract(channel, _next, writer)
         else:
             print('else continue')
+
+        items = None
         if items:
             for one in items:
                 d = {
@@ -125,5 +131,35 @@ def parse_search(data, channel, writer):
                 writer.writerow(d)
 
 
+def next_page():
+    fields = ['channel', 'url']
+    with open('data/next.csv', 'a') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fields)
+        for file in os.listdir('html'):
+            if 'search_' in file:
+                channel = re.findall('search_([^.]+)', file)[0]
+                with open('html/{0}'.format(file), 'rb') as fp:
+                    page_html = fp.read().decode('utf-8')
+                result = re.findall(r'({"responseContext"[^;]+)', page_html)[0]
+                videos = json.loads(result)
+                contents = videos['contents']
+                if contents.get('twoColumnBrowseResultsRenderer'):
+                    tabs = contents['twoColumnBrowseResultsRenderer']['tabs']
+                    parse_common(tabs, channel, writer)
+                elif contents.get('twoColumnSearchResultsRenderer'):
+                    tabs = contents.get('twoColumnSearchResultsRenderer')[
+                        'primaryContents']
+                    parse_search(tabs, channel, writer)
+
+
+def extract(channel, _next, writer):
+    continuation = _next['continuation']
+    clickTrackingParams = _next['clickTrackingParams']
+    url = 'https://www.youtube.com/results?search_query={0}&pbj=1&ctoken={1}&continuation={1}&itct={2}'.format(
+        quote(channel), quote(continuation), quote(clickTrackingParams))
+    d = {'channel': channel, 'url': url}
+    writer.writerow(d)
+
+
 if __name__ == '__main__':
-    crawl()
+    next_page()
