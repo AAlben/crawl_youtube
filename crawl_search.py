@@ -8,23 +8,19 @@ import os
 
 
 def crawl():
-    frame = pd.read_csv('data/channel.csv')
+    frame = pd.read_csv('data/search.csv')
     for item in frame.values:
         channel = item[0]
-        url = item[1] + '/videos'
+        url = item[1]
         headers = {
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
         }
-        channel_id = re.findall(r'channel/([^/]+)', url)[0]
         print(url)
-
-        if check(channel_id):
-            continue
 
         r = requests.get(url, headers=headers)
         print(r.headers)
         time.sleep(1)
-        with open('html/channel_{0}.html'.format(channel_id), 'w') as fp:
+        with open('html/search_{0}.html'.format(channel), 'w') as fp:
             fp.write(r.text)
         if 'responseContext' in r.text:
             print('responseContext in response!!!')
@@ -46,13 +42,6 @@ def parse(page_html, channel):
             tabs = contents.get('twoColumnSearchResultsRenderer')[
                 'primaryContents']
             parse_search(tabs, channel, writer)
-
-
-def check(channel_id):
-    file = os.path.join('html', 'channel_{0}.html'.format(channel_id))
-    if os.path.exists(file):
-        return True
-    return False
 
 
 def parse_common(content, channel, writer):
