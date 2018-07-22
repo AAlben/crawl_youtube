@@ -34,7 +34,7 @@ def parse(page_html, channel):
         result = re.findall(r'({"responseContext"[^;]+)', page_html)[0]
         videos = json.loads(result)
         tabs = videos['contents']['twoColumnBrowseResultsRenderer']['tabs']
-        parse_common(tabs, channel, wri)
+        parse_common(tabs, channel, writer)
 
 
 def parse_common(content, channel, writer):
@@ -84,6 +84,7 @@ def parse_common(content, channel, writer):
                         'channel': channel
                     }
                     print(d)
+                    writer.writerow(d)
 
 
 if __name__ == '__main__':
