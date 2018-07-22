@@ -58,7 +58,7 @@ def parse_common(content, channel, writer):
                     if b.get('shelfRenderer'):
                         c = b['shelfRenderer']['content']
                         if c.get('horizontalMovieListRenderer'):
-                            items = ['horizontalMovieListRenderer']['items']
+                            items = c['horizontalMovieListRenderer']['items']
                             key = 'gridMovieRenderer'
                     elif b.get('gridRenderer'):
                         items = b['gridRenderer']['items']
