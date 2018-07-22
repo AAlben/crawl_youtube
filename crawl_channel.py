@@ -40,6 +40,47 @@ def parse(page_html, channel):
 def parse_common(content, channel, writer):
     for item in content:
         if not item:
+            continue
+        if not item.get('tabRenderer'):
+            continue
+
+        data = item['tabRenderer']
+        if not data.get('content'):
+            continue
+        contents = data['content']['sectionListRenderer']['contents']
+        for a in contents:
+            items = None
+            key = None
+            if not a:
+                continue
+            if a.get('itemSectionRenderer'):
+                for b in a['itemSectionRenderer']['contents']:
+                    if b.get('shelfRenderer'):
+                        c = b['shelfRenderer']['content']
+                        if c.get('horizontalMovieListRenderer'):
+                            items = ['horizontalMovieListRenderer']['items']
+                            key = 'gridMovieRenderer'
+                    elif b.get('gridRenderer'):
+                        items = b['gridRenderer']['items']
+                        key = 'gridVideoRenderer'
+            else:
+                print('else continue')
+            if items:
+                for one in items:
+                    d = {
+                        'title': one[key]['title']['simpleText'],
+                        'data_source': 'youtube',
+                        'url': 'https://www.youtube.com/watch?v=' + one[key]['videoId'],
+                        'response_url': 'https://www.youtube.com/watch?v=' + one[key]['videoId'],
+                        'desc': None,
+                        'tag': None,
+                        'channel': channel
+                    }
+                    print(d)
+
+                    def parse_common(content, channel, writer):
+    for item in content:
+        if not item:
             print('not item')
             continue
         if not item.get('tabRenderer'):
@@ -52,16 +93,15 @@ def parse_common(content, channel, writer):
         for a in contents:
             items = None
             key = None
-            print('index')
             if not a:
                 continue
-            print(a.keys())
             if a.get('itemSectionRenderer'):
                 for b in a['itemSectionRenderer']['contents']:
                     if b.get('shelfRenderer'):
-                        items = b['shelfRenderer']['content'][
-                            'horizontalMovieListRenderer']['items']
-                        key = 'gridMovieRenderer'
+                        c = b['shelfRenderer']['content']
+                        if c.get('horizontalMovieListRenderer'):
+                            items = ['horizontalMovieListRenderer']['items']
+                            key = 'gridMovieRenderer'
                     elif b.get('gridRenderer'):
                         items = b['gridRenderer']['items']
                         key = 'gridVideoRenderer'
