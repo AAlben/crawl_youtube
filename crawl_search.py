@@ -112,11 +112,9 @@ def parse_search(data, channel, writer):
                     key = 'videoRenderer'
             _next = a['itemSectionRenderer'][
                 'continuations'][0]['nextContinuationData']
-            extract(channel, _next, writer)
+            extract(channel, _next)
         else:
             print('else continue')
-
-        items = None
         if items:
             for one in items:
                 d = {
@@ -153,14 +151,18 @@ def next_page():
                     parse_search(tabs, channel, writer)
 
 
-def extract(channel, _next, writer):
-    continuation = _next['continuation']
-    clickTrackingParams = _next['clickTrackingParams']
-    url = 'https://www.youtube.com/results?search_query={0}&pbj=1&ctoken={1}&continuation={1}&itct={2}'.format(
-        quote(channel), quote(continuation), quote(clickTrackingParams))
-    d = {'channel': channel, 'url': url}
-    writer.writerow(d)
+def extract(channel, _next):
+    next_fields = ['channel', 'url']
+    with open('data/next.csv', 'a') as next_csvfile:
+        next_writer = csv.DictWriter(next_csvfile, fieldnames=next_fields)
+        continuation = _next['continuation']
+        clickTrackingParams = _next['clickTrackingParams']
+        url = 'https://www.youtube.com/results?search_query={0}&pbj=1&ctoken={1}&continuation={1}&itct={2}'.format(
+            quote(channel), quote(continuation), quote(clickTrackingParams))
+        d = {'channel': channel, 'url': url}
+        next_writer.writerow(d)
 
 
 if __name__ == '__main__':
     crawl()
+

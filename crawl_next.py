@@ -6,6 +6,7 @@ import pandas as pd
 import csv
 import os
 from urllib.parse import quote
+from optparse import OptionParser
 
 
 def crawl(index):
@@ -127,4 +128,11 @@ def crawl_next(channel, url):
     return _next_d
 
 if __name__ == '__main__':
-    crawl(0)
+    parser = OptionParser()
+    parser.add_option("-i", "--index", dest="index",
+                      help="skip index")
+    (options, args) = parser.parse_args()
+    index = int(options.index)
+    for index in range(8, 60):
+        print(index)
+        crawl(index)
