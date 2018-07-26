@@ -10,7 +10,7 @@ from optparse import OptionParser
 
 
 def crawl(index):
-    frame = pd.read_csv('data/next.csv')
+    frame = pd.read_csv('data/next_d.csv')
     item = frame.iloc[index]
     channel = item[0]
     url = item[1]
@@ -127,12 +127,21 @@ def crawl_next(channel, url):
         _next_d = parse(r.text, channel)
     return _next_d
 
+
+def duplicate():
+    frame = pd.read_csv('data/next.csv')
+    g_frame = frame.groupby(['channel']).tail(1)
+    g_frame.to_csv('data/next_d.csv', index=None, encoding='utf-8')
+
 if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option("-i", "--index", dest="index",
                       help="skip index")
     (options, args) = parser.parse_args()
     index = int(options.index)
-    for index in range(8, 60):
-        print(index)
-        crawl(index)
+
+    while True:
+        for index in range(0, 57):
+            print(index)
+            crawl(index)
+        duplicate()
