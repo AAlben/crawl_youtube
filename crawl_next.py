@@ -143,6 +143,9 @@ if __name__ == '__main__':
     crawl(index)
     raise Exception('', '')
 
+    crawl(index)
+    raise Exception('', '')
+
     while True:
         for index in range(0, 57):
             print(index)
