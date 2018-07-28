@@ -137,9 +137,7 @@ if __name__ == '__main__':
     (options, args) = parser.parse_args()
     index = int(options.index)
     s = requests.session()
-    crawl(index, s)
-    raise Exception('', '')
-
+    duplicate()
     while True:
         for index in range(0, 57):
             print(index)
