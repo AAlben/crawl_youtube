@@ -20,6 +20,7 @@ def crawl(index, session):
             break
         channel = d['channel']
         url = d['url']
+        time.sleep(1)
 
 
 def parse(page_html, channel):
@@ -117,7 +118,6 @@ def crawl_next(channel, url, session):
     data = {'session_token': 'QUFFLUhqbVBYREh1MU1qcHByT1pLS0RqTjdaOGFaamNUZ3xBQ3Jtc0tuZm83WHNVOEg5S0oyNUZybF9IWHN6Y09COUtoSFVyZ2NpdWdRNXY2NTFOUWE4WERSR0Q3allTSXdiQXIwc2hLT0Y2eVNEd1JGT2lyYU93VDdfX1NQWXNhWHJPWmFRYUZCYnZBTXJmbmdHNTFGQ3lldW5YalFRanAwVHZrWWRtUENBZWppdm1wOFZ1aTRyQ0NXejNKTVlMdW5rSHc='}
     r = session.post(url, headers=headers, data=data)
     print(r.headers)
-    time.sleep(1)
     with open('html/next_{0}.html'.format(channel), 'w') as fp:
         fp.write(r.text)
     if 'responseContext' in r.text:
@@ -143,5 +143,5 @@ if __name__ == '__main__':
         for index in range(0, 57):
             print(index)
             crawl(index, s)
+            time.sleep(60)
         duplicate()
-        time.sleep(60)
