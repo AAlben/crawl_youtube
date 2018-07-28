@@ -99,6 +99,7 @@ def crawl_next(channel, url, session):
     headers = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
         'referer': 'https://www.youtube.com/results?search_query=' + quote(channel),
+        'accept-language': 'zh-CN,zh;q=0.9',
         'cookie': 'VISITOR_INFO1_LIVE=7JuVLxpHvVs; PREF=f1=10000000; YSC=Y78BceQVSUI; GPS=1',
         'origin': 'https://www.youtube.com',
         'x-spf-referer': '',
@@ -143,3 +144,4 @@ if __name__ == '__main__':
             print(index)
             crawl(index, s)
         duplicate()
+        time.sleep(60)
