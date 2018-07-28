@@ -40,6 +40,8 @@ def download(frame, index=0):
                 )
             except KeyError as e:
                 continue
+            except SyntaxError as e:
+                continue
             except Exception as e:
                 raise
 
