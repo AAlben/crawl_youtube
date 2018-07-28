@@ -32,11 +32,16 @@ def download(frame, index=0):
                 continue
             if not start_flag:
                 continue
-            result = youtube.download(
-                url,
-                output_dir='/data/videos',
-                merge=False
-            )
+            try:
+                result = youtube.download(
+                    url,
+                    output_dir='/data/videos',
+                    merge=False
+                )
+            except KeyError as e:
+                continue
+            except Exception as e:
+                raise
 
 
 def get_index():
