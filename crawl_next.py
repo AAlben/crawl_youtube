@@ -9,13 +9,13 @@ from urllib.parse import quote
 from optparse import OptionParser
 
 
-def crawl(index):
+def crawl(index, session):
     frame = pd.read_csv('data/next_d.csv')
     item = frame.iloc[index]
     channel = item[0]
     url = item[1]
     while True:
-        d = crawl_next(channel, url)
+        d = crawl_next(channel, url, session)
         if not d:
             break
         channel = d['channel']
@@ -94,30 +94,25 @@ def extract(channel, _next, next_writer):
     return d
 
 
-def crawl_next(channel, url):
+def crawl_next(channel, url, session):
     _next_d = None
     headers = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
         'referer': 'https://www.youtube.com/results?search_query=' + quote(channel),
         'cookie': 'VISITOR_INFO1_LIVE=7JuVLxpHvVs; PREF=f1=10000000; YSC=Y78BceQVSUI; GPS=1',
         'origin': 'https://www.youtube.com',
-        'x-youtube-page-label': 'youtube.ytfe.desktop_20180718_9_RC0',
-        'x-youtube-page-cl': '205170210',
         'x-spf-referer': '',
         'x-youtube-utc-offset': '480',
-        'x-spf-previous': 'https://www.youtube.com/results?search_query=^%^E7^%^A4^%^BE^%^E4^%^BC^%^9A^%^E6^%^91^%^87',
+        'x-spf-previous': 'https://www.youtube.com/results?search_query=' + + quote(channel),
         'x-client-data': 'CIS2yQEIpLbJAQjEtskBCKmdygEIuZ3KAQjXncoBCKifygEIqKPKARi2mMoB',
-        'x-youtube-client-version': '2.20180719',
-        'x-youtube-variants-checksum': '24f9a19047d45980ec580660ddb604bb',
         'content-type': 'application/x-www-form-urlencoded',
         'accept': '*/*',
         'x-youtube-client-name': '1',
         'authority': 'www.youtube.com'
-
     }
     print(url)
     data = {'session_token': 'QUFFLUhqbVBYREh1MU1qcHByT1pLS0RqTjdaOGFaamNUZ3xBQ3Jtc0tuZm83WHNVOEg5S0oyNUZybF9IWHN6Y09COUtoSFVyZ2NpdWdRNXY2NTFOUWE4WERSR0Q3allTSXdiQXIwc2hLT0Y2eVNEd1JGT2lyYU93VDdfX1NQWXNhWHJPWmFRYUZCYnZBTXJmbmdHNTFGQ3lldW5YalFRanAwVHZrWWRtUENBZWppdm1wOFZ1aTRyQ0NXejNKTVlMdW5rSHc='}
-    r = requests.post(url, headers=headers, data=data)
+    r = session.post(url, headers=headers, data=data)
     print(r.headers)
     time.sleep(1)
     with open('html/next_{0}.html'.format(channel), 'w') as fp:
@@ -139,12 +134,12 @@ if __name__ == '__main__':
                       help="skip index")
     (options, args) = parser.parse_args()
     index = int(options.index)
-
-    crawl(index)
+    s = requests.session()
+    crawl(index, s)
     raise Exception('', '')
 
     while True:
         for index in range(0, 57):
             print(index)
-            crawl(index)
+            crawl(index, s
         duplicate()
