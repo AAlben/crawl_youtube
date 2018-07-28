@@ -103,8 +103,10 @@ def crawl_next(channel, url, session):
         'origin': 'https://www.youtube.com',
         'x-spf-referer': '',
         'x-youtube-utc-offset': '480',
-        'x-spf-previous': 'https://www.youtube.com/results?search_query=' + + quote(channel),
+        'x-spf-previous': 'https://www.youtube.com/results?search_query=' + quote(channel),
         'x-client-data': 'CIS2yQEIpLbJAQjEtskBCKmdygEIuZ3KAQjXncoBCKifygEIqKPKARi2mMoB',
+        'x-youtube-client-version': '2.20180726',
+        'x-youtube-variants-checksum': '264b53c862f3e131a08aa358fc7fe968',
         'content-type': 'application/x-www-form-urlencoded',
         'accept': '*/*',
         'x-youtube-client-name': '1',
@@ -141,5 +143,5 @@ if __name__ == '__main__':
     while True:
         for index in range(0, 57):
             print(index)
-            crawl(index, s
+            crawl(index, s)
         duplicate()
