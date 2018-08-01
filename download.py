@@ -19,6 +19,8 @@ def download(frame, index=0):
         for i, item in enumerate(frame.values):
             fp.write(str(i) + '\n')
             url = item[2]
+            if 'watch' not in url:
+                continue
             print(i)
             print(url)
             if index == i:
