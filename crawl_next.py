@@ -101,21 +101,21 @@ def crawl_next(channel, url, session):
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
         'referer': 'https://www.youtube.com/results?search_query=' + quote(channel),
         'accept-language': 'zh-CN,zh;q=0.9',
-        'cookie': 'VISITOR_INFO1_LIVE=7JuVLxpHvVs; PREF=f1=10000000; YSC=Y78BceQVSUI; GPS=1',
+        'cookie': 'VISITOR_INFO1_LIVE=CbnOz6SOk-g; PREF=f1=50000000; YSC=96Qx3UVUups; GPS=1',
         'origin': 'https://www.youtube.com',
         'x-spf-referer': '',
         'x-youtube-utc-offset': '480',
         'x-spf-previous': 'https://www.youtube.com/results?search_query=' + quote(channel),
         'x-client-data': 'CIS2yQEIpLbJAQjEtskBCKmdygEIuZ3KAQjXncoBCKifygEIqKPKARi2mMoB',
-        'x-youtube-client-version': '2.20180726',
-        'x-youtube-variants-checksum': '264b53c862f3e131a08aa358fc7fe968',
+        'x-youtube-client-version': '2.20180731',
+        'x-youtube-variants-checksum': 'de689acd275e940694e023da1daa3ff5',
         'content-type': 'application/x-www-form-urlencoded',
         'accept': '*/*',
         'x-youtube-client-name': '1',
         'authority': 'www.youtube.com'
     }
     print(url)
-    data = {'session_token': 'QUFFLUhqbVBYREh1MU1qcHByT1pLS0RqTjdaOGFaamNUZ3xBQ3Jtc0tuZm83WHNVOEg5S0oyNUZybF9IWHN6Y09COUtoSFVyZ2NpdWdRNXY2NTFOUWE4WERSR0Q3allTSXdiQXIwc2hLT0Y2eVNEd1JGT2lyYU93VDdfX1NQWXNhWHJPWmFRYUZCYnZBTXJmbmdHNTFGQ3lldW5YalFRanAwVHZrWWRtUENBZWppdm1wOFZ1aTRyQ0NXejNKTVlMdW5rSHc='}
+    data = {'session_token': 'QUFFLUhqa2JyVEpEOTdJZmN6a2dBSUtjVUJycnhXbnRhUXxBQ3Jtc0tsWnhqZGlidUFFbUpsZFNZTVR6LTVNMEtIQjBHQVpoeUNCcnZvaTNLWnpLVWhSUzNBdVJNMmd0OHdXVnZxTG1kNGk3ZGFLTmNSVHM1a1VjTVdXQ0l2V0FiU0VuWWtFY0xFTVNrUzkzV1Mxc0E2d0ZTOE9fR3UtRlZ1bmRVcklwRnNkNEZRSjZZZXVRM3BVdEQwUDlETm92Q0V2Tnc'}
     r = session.post(url, headers=headers, data=data)
     print(r.headers)
     with open('html/next_{0}.html'.format(channel), 'w') as fp:
