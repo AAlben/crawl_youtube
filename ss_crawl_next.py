@@ -1,6 +1,8 @@
 import re
 import json
-import requests
+import socks
+import socket
+from urllib import request
 import time
 import pandas as pd
 import csv
@@ -116,13 +118,19 @@ def crawl_next(channel, url, session):
     }
     print(url)
     data = {'session_token': 'QUFFLUhqbVBYREh1MU1qcHByT1pLS0RqTjdaOGFaamNUZ3xBQ3Jtc0tuZm83WHNVOEg5S0oyNUZybF9IWHN6Y09COUtoSFVyZ2NpdWdRNXY2NTFOUWE4WERSR0Q3allTSXdiQXIwc2hLT0Y2eVNEd1JGT2lyYU93VDdfX1NQWXNhWHJPWmFRYUZCYnZBTXJmbmdHNTFGQ3lldW5YalFRanAwVHZrWWRtUENBZWppdm1wOFZ1aTRyQ0NXejNKTVlMdW5rSHc='}
-    r = session.post(url, headers=headers, data=data)
-    print(r.headers)
+    if session is None:
+        r = request.Request(url, headers=headers, method='POST')
+        with request.urlopen(r) as f:
+            page_html = f.read().decode('utf-8')
+    else:
+        r = session.post(url, headers=headers, data=data)
+        page_html = r.text
+    # print(r.headers)
     with open('html/next_{0}.html'.format(channel), 'w') as fp:
-        fp.write(r.text)
-    if 'responseContext' in r.text:
+        fp.write(page_html)
+    if 'responseContext' in page_html:
         print('responseContext in response!!!')
-        _next_d = parse(r.text, channel)
+        _next_d = parse(page_html, channel)
     return _next_d
 
 
@@ -137,7 +145,7 @@ if __name__ == '__main__':
                       help="skip index")
     (options, args) = parser.parse_args()
     index = int(options.index)
-    s = requests.session()
+    s = None
     duplicate()
     while True:
         for index in range(0, 57):
